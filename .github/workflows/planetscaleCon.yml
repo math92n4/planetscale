@@ -1,0 +1,26 @@
+name: Connect to PlanetScale MySQL
+
+on: [push]
+
+env:
+  DB_HOST: eu-central.connect.psdb.cloud
+  DB_PORT: 3306
+  DB_NAME: wishlistdb
+  DB_USER: ${{ secrets.PLANETSCALE_DATABASE_TOKEN_ID }}
+  DB_PASSWORD: ${{ secrets.PLANETSCALE_DATABASE_TOKEN }}
+
+jobs:
+  connect:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Connect to MySQL
+      uses: planetscale/cli@v0.49.0
+      with:
+        args: connect ${DB_HOST}:${DB_PORT}/${DB_NAME} --user=${DB_USER} --password=${DB_PASSWORD}
